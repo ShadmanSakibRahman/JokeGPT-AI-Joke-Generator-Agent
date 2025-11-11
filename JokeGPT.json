@@ -1,0 +1,127 @@
+{
+  "name": "JokeGPT",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Generate Funny Jokes",
+        "formDescription": "AI joke generators offer a powerful tool for creating hilarious and creative jokes. By understanding the key characteristics of effective humor, this tool delivers fun and original jokes on any topic.\n-By Md. Shadman Sakib Rahman",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Joke Topic",
+              "placeholder": "Write Your Joke Topic",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "30ab0df8-ea37-4212-9c2b-5395bc00755b",
+      "name": "On form submission",
+      "webhookId": "5a3ce357-a99c-4c7f-a616-933a38d6b152"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional comedian and joke writer. You create original, funny, and creative jokes that are safe for all audiences, unless otherwise specified. You will give only one joke per request, and make it unique for every topic. Do not repeat the same jokes or patterns.\n\nKeep jokes short, clever, and easy to understand. Avoid dark, offensive, or controversial humor. If no topic or keyword is provided, make a random clean joke instead. Joke topic will be {{ $json['Joke Topic'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "01241d44-6613-4ca9-bbe3-b1ec0ac39a12",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "47c6c1d5-be09-4449-98ca-226ac1183c7e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "5NUKPh7ABrDBLBbz",
+          "name": "Google Gemini(PaLM) Api account 58"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "6c2d61ba-562d-4cb9-baac-ea8fab2ecf93",
+      "name": "Form",
+      "webhookId": "b4f25764-169c-4bb6-9d5b-ba070dc210f6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bc0516ec-fbd8-4f3d-8036-2ea3b1298b77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f00bba974abf03cb5183d4d65f8a9645a781b04770df6a7d08284fca87d50b3"
+  },
+  "id": "xMDk4TuKF4If1QdP",
+  "tags": []
+}
